@@ -1,0 +1,6 @@
+c:\users\tina\documents\visual studio 2015\Projects\BuzzFeedQuiz\BuzzFeedQuiz\bin\Debug\BuzzFeedQuiz.exe.config
+C:\Users\Tina\documents\visual studio 2015\Projects\BuzzFeedQuiz\BuzzFeedQuiz\bin\Debug\BuzzFeedQuiz.exe
+C:\Users\Tina\documents\visual studio 2015\Projects\BuzzFeedQuiz\BuzzFeedQuiz\bin\Debug\BuzzFeedQuiz.pdb
+C:\Users\Tina\documents\visual studio 2015\Projects\BuzzFeedQuiz\BuzzFeedQuiz\obj\Debug\BuzzFeedQuiz.csprojResolveAssemblyReference.cache
+C:\Users\Tina\documents\visual studio 2015\Projects\BuzzFeedQuiz\BuzzFeedQuiz\obj\Debug\BuzzFeedQuiz.exe
+C:\Users\Tina\documents\visual studio 2015\Projects\BuzzFeedQuiz\BuzzFeedQuiz\obj\Debug\BuzzFeedQuiz.pdb
