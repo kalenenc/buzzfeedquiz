@@ -10,7 +10,6 @@ namespace BuzzFeedQuiz
     public class Making
     {
         public string UserName = "";
-        //public int userID = 0;
         public string correctPassword = "";
 
         //---------------------------------------FUNCTIONS----------------------------------------
@@ -26,14 +25,13 @@ namespace BuzzFeedQuiz
         public int CreateUser(string UserName, string PassWord, SqlConnection connection)
         {
             int userID = 0;
-            SqlCommand InsertUserNamePassword = new SqlCommand($"INSERT INTO Users (UserName, Userpassword) VALUES ('{UserName}', '{PassWord}'); SELECT @@Identity AS ID", connection);
+            SqlCommand InsertUserNamePassword = new SqlCommand($"INSERT INTO Users (Username, Userpassword) VALUES ('{UserName}', '{PassWord}'); SELECT @@Identity AS ID", connection);
 
             SqlDataReader ReadBackPassword = InsertUserNamePassword.ExecuteReader();
             if (ReadBackPassword.HasRows)
             {
                 ReadBackPassword.Read();
                 userID = Convert.ToInt32(ReadBackPassword["id"]);
-                UserName = Convert.ToString(ReadBackPassword["username"]);
                 Console.WriteLine($"Cool! your user ID is '{ReadBackPassword["id"]}'");
             }
             ReadBackPassword.Close();
@@ -60,8 +58,6 @@ namespace BuzzFeedQuiz
             }
         }
 
-        //----
-
         //------------------------------------END FUNCTIONS-------------------------------------
     }
 
@@ -77,7 +73,7 @@ namespace BuzzFeedQuiz
             bool registering = true;
             while (registering)
             {
-                Console.WriteLine("Would you like to login or register?");
+                Console.WriteLine("Hi, welcome to 'Make your Own Buzzfeed test!' Would you like to login or register?");
                 string LoginOrRegister = Console.ReadLine().ToLower();
                 if (LoginOrRegister == "login")
                 {
@@ -93,7 +89,8 @@ namespace BuzzFeedQuiz
                         currentUser = Convert.ToInt32(LoginReader["userid"]);
                         Console.WriteLine($"Cool!!! Welcome back, {LoginName}! Your UserID is '{currentUser}'. Now please enter your password");
                         string ReturningPassword = Console.ReadLine();
-                        if (make.correctPassword == ReturningPassword) {
+                        if (make.correctPassword == ReturningPassword)
+                        {
                             Console.WriteLine("Yay, you entered in the correct password! Let's go!");
                             LoginReader.Close();
                             registering = false;
@@ -112,16 +109,16 @@ namespace BuzzFeedQuiz
                 else if (LoginOrRegister == "register")
                 {
                     bool MakingUserName = true;
-                    
+
                     while (MakingUserName)
                     {
                         Console.WriteLine("What do you want your username to be?");
-                        string UserName = Console.ReadLine();
-                        if (make.CheckUserName(UserName, connection))
+                        make.UserName = Console.ReadLine();
+                        if (make.CheckUserName(make.UserName, connection))
                         {
                             Console.WriteLine("Awesome, your name has been entered! Now please choose what you want your password to be");
                             string PassWord = Console.ReadLine();
-                            currentUser = make.CreateUser(UserName, PassWord, connection);
+                            currentUser = make.CreateUser(make.UserName, PassWord, connection);
                             MakingUserName = false;
                             registering = false;
                         }
@@ -137,7 +134,7 @@ namespace BuzzFeedQuiz
                 }
             }
 
-//-------------------------------MAKE A TEST!!!-------------------------------------------
+            //-------------------------------MAKE A TEST!!!-------------------------------------------
 
             Console.WriteLine($"Welcome {make.UserName}!");
             Console.WriteLine("What would you like to do? A) Take a test; B) Create a Test; C) Sign out");
@@ -150,10 +147,10 @@ namespace BuzzFeedQuiz
                 {
                     // TAKE A TEST
                 }
-                
+
                 else if (choice == "b") //make a test
                 {
-                    Console.WriteLine("Let's make a test!/n");
+                    Console.WriteLine("Let's make a test!");
                     Console.WriteLine("What is the title of your test?");
                     string testTitle = Console.ReadLine();
                     SqlCommand insertTestTitle = new SqlCommand($"INSERT INTO Tests (Title, UserId) VALUES ('{testTitle}', {currentUser}); SELECT @@Identity AS ID", connection);
@@ -167,10 +164,54 @@ namespace BuzzFeedQuiz
                     readTestId.Close();
 
                     //ask for number of questions and number of answers (correspond to each of two for loops below)
-                    Console.WriteLine("How many questions would you like? (1-10)");
-                    int testQnum = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("How many answers would you like each question to have? (2-4)");
-                    int testAnum = Convert.ToInt32(Console.ReadLine());
+
+                    bool FalseQuestionNum = true;
+                    int testQnum = 0;
+
+
+                    while (FalseQuestionNum)
+                    {
+                        Console.WriteLine("How many questions would you like? (1-10)");
+
+
+                        string stringText = Console.ReadLine();
+                        int n;
+                 
+
+                        if (int.TryParse(stringText, out n) && n > 0 && n < 11) 
+                        {
+                            testQnum = n;
+                            FalseQuestionNum = false;
+                            
+                        }
+
+                     
+
+                        else
+                        {
+                            Console.WriteLine("Please enter a valid number between 1-10");
+                        }
+                    }
+
+                    bool FalseAnswerNum = true;
+                    int testAnum = 0;
+                    while (FalseAnswerNum)
+                    {
+                        Console.WriteLine("How many answers would you like each question to have? (2-4)");
+                        string stringAnswer = Console.ReadLine();
+                        int n;
+
+                        if (int.TryParse(stringAnswer, out n) && n > 1 && n < 5)
+                        {
+                            testAnum = n;
+                            FalseAnswerNum = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Please enter a valid number between 2 - 4");
+                        }
+                    }
+
                     //loops(i) = number of questions
                     for (int i = 1; i <= testQnum; i++)
                     {
@@ -188,12 +229,33 @@ namespace BuzzFeedQuiz
                         }
                         readQuestion.Close();
                         //loops(j) = number of answers 
+                        int answerValue = 0;
                         for (int j = 1; j <= testAnum; j++)
                         {
                             Console.WriteLine($"Please enter Answer #{j}/{testAnum}: ");
                             string questionAnswer = Console.ReadLine();
                             Console.WriteLine($"What value would you like to assign Answer #{j}/{testAnum}");
-                            int answerValue = Convert.ToInt32(Console.ReadLine());
+                            //int answerValue = Convert.ToInt32(Console.ReadLine());
+                            string stringAnswer = Console.ReadLine();
+                            int n;
+                            bool looping = true;
+
+                            while (looping)
+                            {
+                                Console.WriteLine($"What value would you like to assign Answer #{j}/{testAnum}");
+                                stringAnswer = Console.ReadLine();
+                                if (int.TryParse(stringAnswer, out n))
+                                {
+                                    answerValue = n;
+                                    looping = false;
+                                }
+
+                                else
+                                {
+                                    Console.WriteLine("Please enter a valid numeric value");
+                                }
+                            }
+                            
 
                             //insert (QuestionId, Value, Answer) to[Answers]
                             SqlCommand insertAnswer = new SqlCommand($"INSERT INTO Answers (QuestionId, Value, Answer) VALUES ({questionID}, {answerValue}, '{questionAnswer}')", connection);
@@ -202,6 +264,7 @@ namespace BuzzFeedQuiz
                     }
                     Console.WriteLine("Congratulations! Your test has been saved.");
                     Console.ReadLine();
+                    testing = false;
                 }
 
                 else if (choice == "c")
@@ -214,7 +277,7 @@ namespace BuzzFeedQuiz
                 {
                     Console.WriteLine("Invalid choice. Please select again.");
                     Console.Clear();
-                    testing = true;
+
                 }
             }
             Console.ReadLine();
